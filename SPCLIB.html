@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPC Learning Resource Center</title>
+
+<style>
+* {margin:0; padding:0; box-sizing:border-box;}
+body {font-family: Arial, sans-serif; background-color:#f0f8ff; color:#333; scroll-behavior: smooth;}
+a {text-decoration:none;}
+h1,h2,h3 {color:#004080;}
+
+/* --- Header --- */
+header {
+    position: relative;
+    background-color:#004080; 
+    height:100px;
+    display:flex;
+    align-items:center;
+    padding:0 20px;
+}
+header img {height:80px; margin-right:15px; z-index:2;}
+.header-text {color:white; font-size:24px; font-weight:bold;}
+
+/* --- Navigation --- */
+nav {
+    background-color: #e0e0e0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+}
+nav a {
+    margin: 5px 10px;
+    padding:8px 10px;
+    color:#004080;
+    font-weight:bold;
+    border-radius:5px;
+    transition:0.3s;
+    display:flex;
+    align-items:center;
+}
+nav a:hover, nav a.active {background-color:#004080; color:white;}
+.nav-icon {width:20px; height:20px; margin-right:6px; vertical-align:middle;}
+
+/* --- Sections --- */
+section {max-width: 1000px; margin:30px auto; padding:20px; display:none; animation:fadeIn 0.6s;}
+section.active {display:block;}
+@keyframes fadeIn {from {opacity:0;} to{opacity:1;}}
+
+/* --- Home Section --- */
+#home {
+    position: relative; 
+    text-align:center; 
+    color:white; 
+    padding:60px 20px 20px 20px;
+    background-image:url('https://www.spcdavao.edu.ph/home/wp-content/uploads/2024/01/IMG_7321-1024x683.jpg');
+    background-size:cover;
+    background-position:center;
+}
+#home::before {
+    content:"";
+    position:absolute;
+    top:0; left:0; right:0; bottom:0;
+    background:rgba(0,0,0,0.3);
+}
+#home > * {position:relative; z-index:1;}
+#home h2, #home p {
+    color:white; /* Home heading & paragraph are white */
+    font-weight:bold;
+    -webkit-text-stroke: 0px; 
+    text-stroke: 0px;
+}
+
+/* Newly Processed Books Slider */
+.new-books {margin-top:50px; overflow:hidden; padding:20px; background:rgba(255,255,255,0.9); border-radius:10px;}
+.new-books h3 {color:#004080; margin-bottom:20px;}
+.book-slides {display:flex; transition:transform 0.5s ease-in-out;}
+.book-slide {min-width:200px; margin-right:15px; text-align:center; color:#004080; cursor:grab;}
+.book-slide img {width:150px; height:220px; object-fit:cover; border-radius:5px; box-shadow:0 4px 12px rgba(0,0,0,0.2);}
+.book-slide p {
+    color: #004080; /* <-- Book titles are solid blue now */
+    -webkit-text-stroke: 0px; 
+    text-stroke: 0px;
+    font-weight: bold;
+    margin-top: 10px;
+    font-size: 14px;
+}
+.book-slide:hover {transform: scale(1.05); transition:0.3s;}
+
+/* --- Go to Knimbus Button --- */
+#knimbus-btn {
+    margin-top:30px;
+    padding:10px 20px;
+    background:white; 
+    color:#004080;
+    border:none;
+    border-radius:5px;
+    cursor:pointer;
+    font-weight:bold;
+}
+#knimbus-btn:hover {background:#f0f0f0;}
+
+/* --- Home Announcements --- */
+#home-announcements {display:none; margin-top:30px;}
+.announcement {background-color: #d1ecf1; border-left: 5px solid #17a2b8; padding: 15px; margin-bottom: 15px; border-radius: 8px; box-shadow:0 2px 6px rgba(0,0,0,0.1); color:#004080;}
+
+/* Admin login button & panel */
+#admin-login {margin-top:15px; text-align:center;}
+#admin-login input {margin:5px; padding:8px;}
+#admin-login button {padding:8px 12px; background:#004080; color:white; border:none; border-radius:5px; cursor:pointer;}
+#admin-login button:hover {background:#00264d;}
+#admin-panel {display:none; margin-top:15px;}
+#admin-panel input, #admin-panel textarea {width:100%; margin-bottom:10px; padding:8px;}
+#admin-panel button {padding:10px 15px; background-color:#004080; color:white; border:none; cursor:pointer;}
+#admin-panel button:hover {background-color:#00264d;}
+
+/* --- Info Sections --- */
+section p, section h2 {color:#004080;}
+
+/* --- About Us Sub-Nav Vertical --- */
+.sub-nav {margin: 20px 0; display: flex; flex-direction: column; gap: 10px;}
+.sub-nav a {padding: 8px 12px; background: #e0e0e0; border-radius: 5px; color: #004080; font-weight: bold; display: flex; align-items: center; cursor: pointer; transition: 0.3s;}
+.sub-nav a:hover, .sub-nav a.active {background:#004080; color:white;}
+.about-subsection {display:none; margin-top:15px;}
+.about-subsection.active {display:block;}
+
+/* --- Footer --- */
+footer {background-color:#004080; color:white; text-align:center; padding:15px 0; margin-top:30px;}
+
+/* --- Mobile --- */
+@media(max-width:768px){.book-slides{flex-direction:row; overflow-x:auto;}}
+</style>
+</head>
+<body>
+
+<header>
+    <img src="https://www.spcdavao.edu.ph/home/wp-content/uploads/2021/08/spc-logo.png" alt="SPC Logo">
+    <div class="header-text">SPC Learning Resource Center</div>
+</header>
+
+<nav>
+    <a onclick="showSection('home')"><img src="https://cdn-icons-png.flaticon.com/512/1946/1946436.png" class="nav-icon"> Home</a>
+    <a onclick="showSection('about')"><img src="https://cdn-icons-png.flaticon.com/512/565/565547.png" class="nav-icon"> About Us</a>
+    <a onclick="showSection('opac')"><img src="https://cdn-icons-png.flaticon.com/512/1250/1250615.png" class="nav-icon"> OPAC</a>
+    <a onclick="showSection('databases')"><img src="https://cdn-icons-png.flaticon.com/512/337/337946.png" class="nav-icon"> Databases</a>
+    <a onclick="showSection('services')"><img src="https://cdn-icons-png.flaticon.com/512/3524/3524635.png" class="nav-icon"> Services</a>
+    <a onclick="showSection('faqs')"><img src="https://cdn-icons-png.flaticon.com/512/929/929506.png" class="nav-icon"> FAQs</a>
+    <a onclick="showSection('forms')"><img src="https://cdn-icons-png.flaticon.com/512/1099/1099322.png" class="nav-icon"> Forms</a>
+    <a onclick="showSection('contact-info')"><img src="https://cdn-icons-png.flaticon.com/512/561/561127.png" class="nav-icon"> Contact Us</a>
+</nav>
+
+<section id="home" class="active">
+    <h2>Welcome to SPC Learning Resource Center</h2>
+    <p>Explore, learn, and access newly processed books</p>
+
+    <button id="knimbus-btn" onclick="goToKnimbus()">Go to Knimbus</button>
+
+    <div class="new-books">
+        <h3>Newly Processed Books</h3>
+        <div class="book-slides" id="book-slides">
+            <div class="book-slide"><img src="https://images-na.ssl-images-amazon.com/images/I/41F+CLzD6kL._SX403_BO1,204,203,200_.jpg"><p>Medical-Surgical Nursing</p></div>
+            <div class="book-slide"><img src="https://images-na.ssl-images-amazon.com/images/I/41mH6dQXqCL._SX384_BO1,204,203,200_.jpg"><p>Fundamentals of Nursing</p></div>
+            <div class="book-slide"><img src="https://images-na.ssl-images-amazon.com/images/I/41Tk51AAr+L._SX404_BO1,204,203,200_.jpg"><p>Pharmacology Made Easy</p></div>
+            <div class="book-slide"><img src="https://images-na.ssl-images-amazon.com/images/I/41b6hWJtM1L._SX404_BO1,204,203,200_.jpg"><p>Anatomy & Physiology</p></div>
+            <div class="book-slide"><img src="https://images-na.ssl-images-amazon.com/images/I/41V8Xdk0GqL._SX404_BO1,204,203,200_.jpg"><p>Pathophysiology</p></div>
+            <div class="book-slide"><img src="https://images-na.ssl-images-amazon.com/images/I/41N1x6qkZ2L._SX404_BO1,204,203,200_.jpg"><p>Microbiology for Nurses</p></div>
+            <div class="book-slide"><img src="https://images-na.ssl-images-amazon.com/images/I/41ZuwgnxVUL._SX404_BO1,204,203,200_.jpg"><p>Nutrition Essentials</p></div>
+            <div class="book-slide"><img src="https://images-na.ssl-images-amazon.com/images/I/41RfVtA3J7L._SX404_BO1,204,203,200_.jpg"><p>Medical Ethics</p></div>
+            <div class="book-slide"><img src="https://images-na.ssl-images-amazon.com/images/I/41pJsmRNVWL._SX404_BO1,204,203,200_.jpg"><p>Clinical Skills</p></div>
+            <div class="book-slide"><img src="https://images-na.ssl-images-amazon.com/images/I/41Fw2G1f5RL._SX404_BO1,204,203,200_.jpg"><p>Evidence-Based Practice</p></div>
+        </div>
+    </div>
+
+    <div style="margin-top:30px;"><button onclick="toggleAnnouncements()">View Announcements</button></div>
+
+    <div id="home-announcements">
+        <h3>Announcements</h3>
+        <div id="announcement-list"></div>
+
+        <div id="admin-login">
+            <button onclick="showAdminLogin()">Admin</button>
+        </div>
+
+        <div id="admin-panel">
+            <h3>Post New Announcement</h3>
+            <input type="text" id="announcement-title" placeholder="Title">
+            <textarea id="announcement-text" placeholder="Announcement text"></textarea>
+            <input type="text" id="announcement-img" placeholder="Image/Video URL (optional)">
+            <button onclick="addAnnouncement()">Post Announcement</button>
+        </div>
+    </div>
+</section>
+
+<!-- About Us -->
+<section id="about">
+<h2>About Us</h2>
+<p>San Pedro College (SPC) was founded in 1956 by the Dominican Sisters of the Trinity.</p>
+
+<div class="sub-nav">
+    <a onclick="showSubSection('director')"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" class="nav-icon"> Director's Office</a>
+    <a onclick="showSubSection('vision')"><img src="https://cdn-icons-png.flaticon.com/512/2910/2910767.png" class="nav-icon"> Vision & Mission</a>
+</div>
+
+<div class="about-subsection" id="director">
+    <h3>Director's Office</h3>
+    <p>The Director oversees all library operations.</p>
+</div>
+
+<div class="about-subsection" id="vision">
+    <h3>Vision & Mission</h3>
+    <p><strong>Vision:</strong> Leading center of learning in Davao City.</p>
+    <p><strong>Mission:</strong> Provide access to quality academic resources.</p>
+    <p><a href="https://spcdavao.edu.ph/library/" target="_blank">SPC Library Davao</a></p>
+</div>
+</section>
+
+<!-- OPAC -->
+<section id="opac">
+<h2>OPAC</h2>
+<p>Search and reserve books online.</p>
+</section>
+
+<!-- Databases -->
+<section id="databases">
+<h2>Databases</h2>
+<p>Access academic databases for research.</p>
+</section>
+
+<!-- Services -->
+<section id="services">
+<h2>Library Services</h2>
+<p>Access books, journals, and study spaces.</p>
+</section>
+
+<!-- FAQs -->
+<section id="faqs">
+<h2>FAQs</h2>
+<p>Frequently asked questions about the library.</p>
+</section>
+
+<!-- Forms -->
+<section id="forms">
+<h2>Forms</h2>
+<p>Library forms for registration, book requests, and reservations.</p>
+<ul>
+<li><a href="https://www.spcdavao.edu.ph/library-registration-form.pdf" target="_blank">Library Registration Form</a></li>
+<li><a href="https://www.spcdavao.edu.ph/library-book-request.pdf" target="_blank">Book Request Form</a></li>
+<li><a href="https://www.spcdavao.edu.ph/library-room-reservation.pdf" target="_blank">Room Reservation Form</a></li>
+</ul>
+</section>
+
+<!-- Contact -->
+<section id="contact-info">
+<h2>Contact Us</h2>
+<p>San Pedro College – Main Campus, Davao City</p>
+<p>Phone: (082) 221‑0634 / 224‑1481 | Email: spc@spcdavao.edu.ph</p>
+</section>
+
+<footer>
+&copy; 2026 SPC Learning Resource Center. All rights reserved.
+</footer>
+
+<script>
+// Nav & Section
+function showSection(id){
+    document.querySelectorAll('section').forEach(s=>s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    document.querySelectorAll('nav a').forEach(a=>a.classList.remove('active'));
+    const navLink=document.querySelector(`nav a[onclick="showSection('${id}')"]`);
+    if(navLink) navLink.classList.add('active');
+}
+
+// About Us sub-nav
+function showSubSection(id){
+    document.querySelectorAll('.about-subsection').forEach(s=>s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    document.querySelectorAll('.sub-nav a').forEach(a=>a.classList.remove('active'));
+    const subLink=document.querySelector(`.sub-nav a[onclick="showSubSection('${id}')"]`);
+    if(subLink) subLink.classList.add('active');
+}
+
+// Books slider
+let bookIndex=0;
+function slideBooks(){
+    const slides=document.getElementById('book-slides');
+    bookIndex++;
+    if(bookIndex>=slides.children.length-3) bookIndex=0;
+    slides.style.transform="translateX(-"+(bookIndex*215)+"px)";
+}
+setInterval(slideBooks,3000);
+
+// Knimbus
+function goToKnimbus(){ window.open("https://spcdavao.knimbus.com/portal/v2/default/searchresult?searchItem=GENERAL%20PHYSICS","_blank"); }
+
+// Announcements toggle
+function toggleAnnouncements(){
+    const div=document.getElementById('home-announcements');
+    div.style.display = (div.style.display==='none'||div.style.display==='') ? 'block' : 'none';
+}
+
+// Admin
+const ADMIN_USER="Yuna081724";
+const ADMIN_PASS="081724";
+let adminLoggedIn=false;
+function showAdminLogin(){
+    const loginDiv=document.getElementById('admin-login');
+    loginDiv.innerHTML=`
+    <input type="text" id="admin-username" placeholder="Username">
+    <input type="password" id="admin-password" placeholder="Password">
+    <button onclick="loginAdmin()">Login</button>`;
+}
+
+function loginAdmin(){
+    const u=document.getElementById('admin-username').value.trim();
+    const p=document.getElementById('admin-password').value.trim();
+    if(u===ADMIN_USER && p===ADMIN_PASS){
+        adminLoggedIn=true;
+        document.getElementById('admin-login').style.display='none';
+        document.getElementById('admin-panel').style.display='block';
+        loadAnnouncements();
+        alert("Admin logged in!");
+    }else alert("Incorrect username or password.");
+}
+
+function loadAnnouncements(){
+    const list=document.getElementById('announcement-list');
+    list.innerHTML="";
+    let ann=JSON.parse(localStorage.getItem('announcements')||"[]");
+    if(ann.length===0){
+        const defaults=[
+            {title:"Jan 27, 2026", text:"New e-books on Graphic Design!", img:""},
+            {title:"Jan 20, 2026", text:"Online coding workshop registration open.", img:""},
+            {title:"Jan 15, 2026", text:"Library hours extended till 8 PM.", img:""}
+        ];
+        localStorage.setItem('announcements', JSON.stringify(defaults));
+        ann.push(...defaults);
+    }
+    ann.forEach((item,index)=>{
+        const div=document.createElement('div'); 
+        div.className='announcement';
+        div.innerHTML=item.img?`<strong>${item.title}</strong>: ${item.text}<br><img src="${item.img}" style="max-width:100%; margin-top:10px;">`:`<strong>${item.title}</strong>: ${item.text}`;
+        if(adminLoggedIn){
+            const btn=document.createElement('button'); 
+            btn.textContent='Delete';
+            btn.style.cssText='margin-top:10px;background:#c82333;color:white;border:none;padding:5px 10px;cursor:pointer;';
+            btn.onclick=()=>{if(confirm("Delete this announcement?")) deleteAnnouncement(index);};
+            div.appendChild(btn);
+        }
+        list.appendChild(div);
+    });
+}
+
+function addAnnouncement(){
+    if(!adminLoggedIn){alert("Please login as admin first!"); return;}
+    const t=document.getElementById('announcement-title').value.trim();
+    const txt=document.getElementById('announcement-text').value.trim();
+    const img=document.getElementById('announcement-img').value.trim();
+    if(!t||!txt){alert("Title and text required."); return;}
+    let ann=JSON.parse(localStorage.getItem('announcements')||"[]");
+    ann.unshift({title:t,text:txt,img});
+    localStorage.setItem('announcements', JSON.stringify(ann));
+    document.getElementById('announcement-title').value='';
+    document.getElementById('announcement-text').value='';
+    document.getElementById('announcement-img').value='';
+    loadAnnouncements();
+}
+
+function deleteAnnouncement(i){
+    let ann=JSON.parse(localStorage.getItem('announcements')||"[]");
+    ann.splice(i,1);
+    localStorage.setItem('announcements', JSON.stringify(ann));
+    loadAnnouncements();
+}
+
+loadAnnouncements();
+</script>
+</body>
+</html>
